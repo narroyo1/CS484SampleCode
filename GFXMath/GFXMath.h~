@@ -5,8 +5,6 @@
  * Assignment 2 
  * CS484
  * Source files: GFXMath.h, GFXMath_Test.cpp, Makefile
- * Purpose: This file initializes and defines many useful functions for vector math,
- * 	    needed for later in the semester.
  * ------------------------------------
  *
  * Copyright (c) 2015 Michael Shafae

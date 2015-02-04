@@ -1,13 +1,13 @@
 /*
  * ------------------------------------ 
- * FILE MODIFED BY Nicholas Arroyo (arroyo@csu.fullerton.edu)
+ * FILE MODIFED BY Nicholas Arroyo
  * Feburary 3, 2015
  * Assignment 2 
  * CS484
- * Source files: GFXMath.h, GFXMath_Test.cpp, Makefile
- * Purpose: This file initializes and defines many useful functions for vector math,
- * 	    needed for later in the semester.
  * ------------------------------------
+ *
+ * NOTE TO SELF:
+ * CTRL + F "// Fill me in" for TODO things; "// I think this works" for my changes
  *
  * Copyright (c) 2015 Michael Shafae
  * All rights reserved.
@@ -260,6 +260,7 @@ public:
   }
   
   VecN operator -(const VecN& rhs) const{
+    // I think this works
     // Vector - Vector
     VecN difference;
     for(int i=0;i<length;i++)
@@ -276,7 +277,7 @@ public:
   VecN operator *(const T& s) const{
     VecN rv;
     // I think this works
-    // Vector * Scalar
+    // Vector * Vector
     for(int i=0;i<length;i++)
     {
 	rv.data[i]=data[i]*s;
@@ -292,7 +293,7 @@ public:
   VecN operator /(const T& s) const{
     VecN rv;
     // I think this works
-    // Vector / Scalar
+    // Vector / Vector
     for(int i=0;i<length;i++)
     {
 	rv.data[i]=data[i]/s;
@@ -325,14 +326,9 @@ public:
     // I think this works
     // Check vector on left side to see if it's the same as the one on the right side of operator
     // Return true if so, false if not
-    // Uses "fpNotEqual" to judge values to a certain precision
     bool rv = true;
-
-    for(int i=0;i<length;i++)
-    {
-	if(fpNotEqual(data[i],rhs.data[i],float(FP_SP_EPSILON)))
-		rv = false;
-    }
+    if(*this != rhs)
+	rv = false;
     return rv;
   }
   
@@ -340,14 +336,9 @@ public:
     // I think this works
     // Same as overloaded "==" operator, but in reverse.
     // Returning true says the vectors are NOT equal to each other.
-    // Uses "fpEqual" to judge values to a certain precision
     bool rv = true;
-
-    for(int i=0;i<length;i++)
-    {
-	if(fpEqual(data[i],rhs.data[i],float(FP_SP_EPSILON)))
-		rv = false;
-    }
+    if(*this == rhs)
+	rv = false;
     return rv;
   }
   
@@ -530,71 +521,54 @@ static const TVec4<T> operator /(T lhs, const TVec4<T>& rhs){
 
 template <typename T, int length>
 static T dot(const VecN<T, length>& a, const VecN<T, length>& b){
-  //Dot product of vectors a and b = (A[x]*B[x])+(A[y]*B[Y])+...+(A[n]*B[n])
-  //Results in a scalar number
   T rv(0);
-  for(int i=0;i<length;i++)
-  {
-	rv += (a[i]*b[i]);
-  }
+  // Fill me in!
   return rv;
 }
 
 template <typename T, int length>
 static T squaredLength(const VecN<T, length>& v){
   T rv(0);
-  //Length of a vector |a| = sqrt[(ax^2)+(ay^2)+(az^2)+...(an^2)]
-  //That is, square each coordinate's values then add them together
-  //We take the square root of this sum for the final length, but since this function
-  //is being called by "length", that function will take care of that part.
-  
-  for(int i=0;i<length;i++)
-  {
-	rv += sqr(v[i]);
-  }
+  //All this does is receive the length as a parameter, square it, then return it
+  rv = sqr(v);
   return rv;
 }
 
 template <typename T, int length>
 static T length(const VecN<T, length>& v){
-  //Take the square root of the value found in "squaredlength"
   return sqrt(squaredLength(v));
 }
 
 template <typename T, int _length>
 static VecN<T, _length> normalize(const VecN<T, _length>& v){
+  // I think this works
   //How to normalize a vector:
-  //Get its length (obtained via "length" function), divide x,y,z parts of vector by absolute length
- 
+  //Get its length (passed into function in this case), divide x,y,z parts of vector by absolute length
+
   VecN<T, _length> rv;
   rv = v/length(v);
+  
   return rv;
 }
 
 template <typename T, int length>
 static T distance(const VecN<T, length>& a, const VecN<T, length>& b){
   T rv;
-  //Distance between two vectors d(u,v) = sqrt[(u1-v1)^2+(u2-v2)^2+...+(u_n-v_n)^2]
-  //Fill this in!
+  // Fill me in!
   return rv;
 }
 
 template <typename T>
 static T angleInRadians(const TVec2<T>& a, const TVec2<T>& b){
   T rv(0);
-  //Find the angle between two 2D vectors (in radians).
-  //angle = acos(dot product of vectors a and b) 
-  rv = acos((dot(a,b))/(length(a)*length(b)));
+  // Fill me in!
   return rv;
 }
 
 template <typename T>
 static T angleInRadians(const TVec3<T>& a, const TVec3<T>& b){
   T rv(0);
-  //Find the angle between two 3D vectors (in radians).
-  //angle = acos(dot product of vectors a and b divided by the product of the lengths of vectors a and b) 
-  //It seems to be the same formula as with 2d vectors!
-  rv = acos((dot(a,b))/(length(a)*length(b)));
+  // Fill me in!
   return rv;
 }
 
@@ -613,12 +587,8 @@ static T angle(const TVec3<T>& a, const TVec3<T>& b){
 
 template <typename T>
 static VecN<T, 3> cross(const VecN<T, 3>& a, const VecN<T, 3>& b){
-  // Find cross product of two 3D vectors
-  // From my understanding, a cross product is a vector that is at a right angle of two other vectors
-  // In this case, the function will return a vector that is at a right angle of vectors a and b
-  // Formula: a cross b (known as AxB):
-  // AxB[x] = A[y]*B[z] - B[y]*A[z] | AxB[y] = A[z]*B[x]-B[z]*A[x] | AxB[z] = A[x]*B[y]-B[x]*A[y]
-  return TVec3<T>((a[1]*b[2]-b[1]*a[2]), (a[2]*b[0]-b[2]*a[0]), (a[0]*b[1]-b[0]*a[1]));
+  // Fill me in!
+  return TVec3<T>(0, 0, 0);
 }
 
 template <typename T, int length>
